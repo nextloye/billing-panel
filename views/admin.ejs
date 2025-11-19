@@ -1,0 +1,1 @@
+<% invoices.forEach(i=>{ %><div><%= i.id %> - <%= i.status %> <a href='/admin/approve/<%= i.id %>'>Approve</a> <a href='/admin/reject/<%= i.id %>'>Reject</a></div><% }) %>
