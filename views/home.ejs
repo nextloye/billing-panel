@@ -1,62 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Zyntrix Billing Panel</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<title>Zyntrix Billing Panel</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
 
-  <!-- Navbar -->
-  <nav class="bg-white shadow p-4 flex justify-between items-center">
-    <h1 class="text-2xl font-bold text-blue-600">Zyntrix Billing Panel</h1>
-    <div class="space-x-4">
+<nav class="bg-white shadow p-4 flex justify-between items-center">
+  <h1 class="text-2xl font-bold text-blue-600">Zyntrix Billing Panel</h1>
+  <div class="space-x-4">
+    <% if(!locals.userId){ %>
       <a href="/signin" class="text-gray-700 hover:text-blue-500 font-semibold">Sign In</a>
       <a href="/signup" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">Sign Up</a>
+    <% } else { %>
+      <a href="/logout" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold">Logout</a>
+    <% } %>
+  </div>
+</nav>
+
+<main class="p-8 max-w-6xl mx-auto">
+  <h2 class="text-3xl font-bold mb-6">Choose Your Hosting Plan</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Minecraft Server Hosting -->
+    <div class="bg-white rounded shadow p-6 flex flex-col justify-between">
+      <div>
+        <h3 class="text-xl font-bold mb-2">Minecraft Server Hosting</h3>
+        <p class="text-gray-600">Select from our wide range of optimized game servers. Each server is configured for maximum performance and comes with DDoS protection.</p>
+      </div>
+      <a href="/plans/minecraft" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold text-center">
+        View Plans
+      </a>
     </div>
-  </nav>
 
-  <!-- Main Content -->
-  <main class="p-8 max-w-6xl mx-auto">
-    <h2 class="text-3xl font-bold mb-6">Choose Your Hosting Plan</h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-      <!-- Minecraft Server Hosting -->
-      <div class="bg-white rounded shadow p-6 flex flex-col justify-between">
-        <div>
-          <h3 class="text-xl font-bold mb-2">Minecraft Server Hosting</h3>
-          <p class="text-gray-600">Select from our wide range of optimized game servers. Each server is configured for maximum performance and comes with DDoS protection.</p>
-        </div>
-        <a href="/plans/minecraft" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold text-center">
-          View Plans
-        </a>
+    <!-- VPS Hosting -->
+    <div class="bg-white rounded shadow p-6 flex flex-col justify-between border-2 border-blue-500">
+      <div>
+        <h3 class="text-xl font-bold mb-2">VPS Hosting</h3>
+        <p class="text-gray-600">High-performance virtual private servers with full root access, SSD storage, and 24/7 support. Perfect for developers and businesses.</p>
       </div>
-
-      <!-- VPS Hosting -->
-      <div class="bg-white rounded shadow p-6 flex flex-col justify-between border-2 border-blue-500">
-        <div>
-          <h3 class="text-xl font-bold mb-2">VPS Hosting</h3>
-          <p class="text-gray-600">High-performance virtual private servers with full root access, SSD storage, and 24/7 support. Perfect for developers and businesses.</p>
-        </div>
-        <a href="/plans/vps" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold text-center">
-          View Plans
-        </a>
-      </div>
-
-      <!-- Bot Hosting -->
-      <div class="bg-white rounded shadow p-6 flex flex-col justify-between">
-        <div>
-          <h3 class="text-xl font-bold mb-2">Bot Hosting</h3>
-          <p class="text-gray-600">Reliable and affordable Discord bot hosting with 24/7 uptime, Node.js support, and easy deployment. Perfect for developers of all skill levels.</p>
-        </div>
-        <a href="/plans/bot" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold text-center">
-          View Plans
-        </a>
-      </div>
-
+      <a href="/plans/vps" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold text-center">
+        View Plans
+      </a>
     </div>
-  </main>
+
+    <!-- Bot Hosting -->
+    <div class="bg-white rounded shadow p-6 flex flex-col justify-between">
+      <div>
+        <h3 class="text-xl font-bold mb-2">Bot Hosting</h3>
+        <p class="text-gray-600">Reliable and affordable Discord bot hosting with 24/7 uptime, Node.js support, and easy deployment. Perfect for developers of all skill levels.</p>
+      </div>
+      <a href="/plans/bot" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold text-center">
+        View Plans
+      </a>
+    </div>
+
+  </div>
+</main>
 
 </body>
 </html>
