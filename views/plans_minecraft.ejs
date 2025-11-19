@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Minecraft Server Plans - Zyntrix Billing Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-blue-600">Zyntrix Billing Panel</h1>
+    <div class="space-x-4">
+      <% if(!locals.userId){ %>
+        <a href="/signin" class="text-gray-700 hover:text-blue-500 font-semibold">Sign In</a>
+        <a href="/signup" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">Sign Up</a>
+      <% } else { %>
+        <a href="/logout" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-semibold">Logout</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="p-8 max-w-4xl mx-auto flex-grow">
+    <h2 class="text-3xl font-bold mb-6 text-center">Choose Your Hosting Plan</h2>
+
+    <div class="space-y-6">
+
+      <!-- Plan 1 -->
+      <div class="bg-white rounded shadow p-6 flex justify-between items-center">
+        <div>
+          <h3 class="text-xl font-bold">Budget Minecraft Server Plans</h3>
+          <p class="text-gray-600">Intel Xeon 3.3GHz</p>
+        </div>
+        <% if(locals.userId){ %>
+          <a href="/checkout/minecraft/budget" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">View Plans</a>
+        <% } else { %>
+          <a href="/signin" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">View Plans</a>
+        <% } %>
+      </div>
+
+      <!-- Plan 2 -->
+      <div class="bg-white rounded shadow p-6 flex justify-between items-center">
+        <div>
+          <h3 class="text-xl font-bold">Epyc/Xeon CPU 3.3GHz+ Minecraft Server Plans</h3>
+          <p class="text-gray-600">High performance CPU for better server stability</p>
+        </div>
+        <% if(locals.userId){ %>
+          <a href="/checkout/minecraft/epyc" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">View Plans</a>
+        <% } else { %>
+          <a href="/signin" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">View Plans</a>
+        <% } %>
+      </div>
+
+      <!-- Plan 3 -->
+      <div class="bg-white rounded shadow p-6 flex justify-between items-center">
+        <div>
+          <h3 class="text-xl font-bold">Ryzen 9 5900x / 7900x 5.4GHz Turbo Minecraft Server Plans</h3>
+          <p class="text-gray-600">Top-tier CPU for maximum performance and speed</p>
+        </div>
+        <% if(locals.userId){ %>
+          <a href="/checkout/minecraft/ryzen" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">View Plans</a>
+        <% } else { %>
+          <a href="/signin" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">View Plans</a>
+        <% } %>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>
