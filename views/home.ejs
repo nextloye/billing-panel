@@ -7,80 +7,52 @@
 </head>
 <body class="bg-gray-100">
 
+  <!-- Navbar -->
   <nav class="bg-white shadow p-4 flex justify-between items-center">
     <h1 class="text-2xl font-bold text-blue-600">Zyntrix Billing Panel</h1>
-    <a href="/admin" class="text-gray-700 hover:text-blue-500 font-semibold">Admin Login</a>
+    <div class="space-x-4">
+      <a href="/signin" class="text-gray-700 hover:text-blue-500 font-semibold">Sign In</a>
+      <a href="/signup" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">Sign Up</a>
+    </div>
   </nav>
 
+  <!-- Main Content -->
   <main class="p-8 max-w-6xl mx-auto">
     <h2 class="text-3xl font-bold mb-6">Choose Your Hosting Plan</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-      <!-- Basic Plan -->
+      <!-- Minecraft Server Hosting -->
       <div class="bg-white rounded shadow p-6 flex flex-col justify-between">
         <div>
-          <h3 class="text-xl font-bold mb-2">Basic Plan</h3>
-          <p class="mb-4 text-gray-600">Perfect for small projects.</p>
-          <ul class="mb-4 space-y-1 text-gray-500">
-            <li>✔ 1 GB Storage</li>
-            <li>✔ 10 GB Bandwidth</li>
-            <li>✔ Basic Support</li>
-          </ul>
+          <h3 class="text-xl font-bold mb-2">Minecraft Server Hosting</h3>
+          <p class="text-gray-600">Select from our wide range of optimized game servers. Each server is configured for maximum performance and comes with DDoS protection.</p>
         </div>
-        <form method="POST" action="/checkout" class="flex flex-col gap-2">
-          <input type="hidden" name="plan" value="Basic Plan">
-          <input type="hidden" name="amount" value="10">
-          <input type="text" name="user" placeholder="Your Name" required
-                 class="border p-2 rounded w-full">
-          <button class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">
-            Checkout $10
-          </button>
-        </form>
+        <a href="/plans/minecraft" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold text-center">
+          View Plans
+        </a>
       </div>
 
-      <!-- Pro Plan -->
+      <!-- VPS Hosting -->
       <div class="bg-white rounded shadow p-6 flex flex-col justify-between border-2 border-blue-500">
         <div>
-          <h3 class="text-xl font-bold mb-2">Pro Plan</h3>
-          <p class="mb-4 text-gray-600">Best for growing businesses.</p>
-          <ul class="mb-4 space-y-1 text-gray-500">
-            <li>✔ 5 GB Storage</li>
-            <li>✔ 50 GB Bandwidth</li>
-            <li>✔ Priority Support</li>
-          </ul>
+          <h3 class="text-xl font-bold mb-2">VPS Hosting</h3>
+          <p class="text-gray-600">High-performance virtual private servers with full root access, SSD storage, and 24/7 support. Perfect for developers and businesses.</p>
         </div>
-        <form method="POST" action="/checkout" class="flex flex-col gap-2">
-          <input type="hidden" name="plan" value="Pro Plan">
-          <input type="hidden" name="amount" value="50">
-          <input type="text" name="user" placeholder="Your Name" required
-                 class="border p-2 rounded w-full">
-          <button class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">
-            Checkout $50
-          </button>
-        </form>
+        <a href="/plans/vps" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold text-center">
+          View Plans
+        </a>
       </div>
 
-      <!-- Premium Plan -->
+      <!-- Bot Hosting -->
       <div class="bg-white rounded shadow p-6 flex flex-col justify-between">
         <div>
-          <h3 class="text-xl font-bold mb-2">Premium Plan</h3>
-          <p class="mb-4 text-gray-600">For large scale projects.</p>
-          <ul class="mb-4 space-y-1 text-gray-500">
-            <li>✔ 20 GB Storage</li>
-            <li>✔ Unlimited Bandwidth</li>
-            <li>✔ 24/7 Support</li>
-          </ul>
+          <h3 class="text-xl font-bold mb-2">Bot Hosting</h3>
+          <p class="text-gray-600">Reliable and affordable Discord bot hosting with 24/7 uptime, Node.js support, and easy deployment. Perfect for developers of all skill levels.</p>
         </div>
-        <form method="POST" action="/checkout" class="flex flex-col gap-2">
-          <input type="hidden" name="plan" value="Premium Plan">
-          <input type="hidden" name="amount" value="100">
-          <input type="text" name="user" placeholder="Your Name" required
-                 class="border p-2 rounded w-full">
-          <button class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold">
-            Checkout $100
-          </button>
-        </form>
+        <a href="/plans/bot" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold text-center">
+          View Plans
+        </a>
       </div>
 
     </div>
