@@ -1,5 +1,14 @@
 <h1>Invoice <%= invoice.id %></h1>
-<p>Pay UPI: <%= upi %></p>
-<form method='POST' action='/invoice/'+invoice.id+'/upload' enctype='multipart/form-data'>
-<input type='file' name='ss'/><button>Upload</button>
+
+<h2>Pay using UPI</h2>
+<p><strong>UPI ID:</strong> <%= upi %></p>
+
+<h2>Or pay with Litecoin (LTC)</h2>
+<p><strong>LTC Address:</strong> <%= ltc %></p>
+
+<form method='POST' action='/invoice/<%= invoice.id %>/upload' enctype='multipart/form-data'>
+  <input type='file' name='ss' required/>
+  <button>Upload Payment Screenshot</button>
 </form>
+
+<p>Status: <%= invoice.status %></p>
