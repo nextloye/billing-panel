@@ -8,5 +8,8 @@
     "sqlite3": "^5.1.2",
     "nodemailer": "^6.9.0",
     "ejs": "^3.1.9"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }
