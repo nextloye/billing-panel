@@ -1,7 +1,60 @@
-<h1>Admin Panel</h1>
-<% invoices.forEach(i => { %>
-  <div>
-    Invoice <%= i.id %> - <%= i.user %> - <%= i.plan %> - $<%= i.amount %> - Status: <%= i.status %>
-    [<a href='/admin/approve/<%= i.id %>'>Approve</a> | <a href='/admin/reject/<%= i.id %>'>Reject</a>]
-  </div>
-<% }) %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+  <nav class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-blue-600">Admin Panel</h1>
+    <a href="/" class="text-gray-700 hover:text-blue-500 font-semibold">Home</a>
+  </nav>
+
+  <main class="p-8 max-w-6xl mx-auto">
+
+    <h2 class="text-2xl font-bold mb-6">Invoices</h2>
+
+    <div class="overflow-x-auto bg-white rounded shadow">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Plan</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% invoices.forEach(i => { %>
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap"><%= i.id %></td>
+            <td class="px-6 py-4 whitespace-nowrap"><%= i.user %></td>
+            <td class="px-6 py-4 whitespace-nowrap"><%= i.plan %></td>
+            <td class="px-6 py-4 whitespace-nowrap">$<%= i.amount %></td>
+            <td class="px-6 py-4 whitespace-nowrap font-semibold">
+              <% if (i.status === "PAID") { %>
+                <span class="text-green-600"><%= i.status %></span>
+              <% } else if (i.status === "PENDING") { %>
+                <span class="text-yellow-600"><%= i.status %></span>
+              <% } else { %>
+                <span class="text-red-600"><%= i.status %></span>
+              <% } %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap space-x-2">
+              <a href="/admin/approve/<%= i.id %>" class="text-green-600 font-semibold hover:underline">Approve</a>
+              <a href="/admin/reject/<%= i.id %>" class="text-red-600 font-semibold hover:underline">Reject</a>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+</body>
+</html>
