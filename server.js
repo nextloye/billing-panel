@@ -4,11 +4,20 @@ const sqlite3 = require('sqlite3').verbose();
 const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
+const session = require('express-session');
+const bcrypt = require('bcrypt');
 
 const app = express();
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+// Session
+app.use(session({
+  secret: 'zyntrix-secret-key',
+  resave: false,
+  saveUninitialized: false
+}));
 
 // Ensure uploads folder exists
 const uploadDir = path.join(__dirname, 'uploads');
@@ -26,6 +35,12 @@ db.serialize(() => {
     screenshot TEXT,
     status TEXT
   )`);
+  db.run(`CREATE TABLE IF NOT EXISTS users(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE,
+    email TEXT UNIQUE,
+    password TEXT
+  )`);
 });
 
 // Multer storage
@@ -39,51 +54,93 @@ let transporter = nodemailer.createTransport({
   auth: { user: "mail@zyntrixtech.xyz", pass: "dummy" }
 });
 
-// Routes
-app.get('/', (req, res) => res.render('home'));
-app.post('/checkout', (req, res) => {
-  const { user, plan, amount } = req.body;
-  db.run(
-    "INSERT INTO invoices(user, plan, amount, status) VALUES (?,?,?,?)",
-    [user, plan, amount, "UNPAID"],
-    function () { res.redirect('/invoice/' + this.lastID); }
-  );
+// Middleware to expose userId to templates
+app.use((req,res,next)=>{
+  res.locals.userId = req.session.userId;
+  next();
 });
-app.get('/invoice/:id', (req, res) => {
-  db.get("SELECT * FROM invoices WHERE id=?", req.params.id, (err, row) => {
-    res.render('invoice', {
+
+// Routes
+
+// Home
+app.get('/', (req,res)=>res.render('home'));
+
+// Sign Up
+app.get('/signup', (req,res)=>res.render('signup'));
+app.post('/signup', async (req,res)=>{
+  const {username,email,password} = req.body;
+  const hash = await bcrypt.hash(password,10);
+  db.run("INSERT INTO users(username,email,password) VALUES(?,?,?)",[username,email,hash],function(err){
+    if(err) return res.send("Error: User/email may already exist.");
+    req.session.userId = this.lastID;
+    res.redirect('/');
+  });
+});
+
+// Sign In
+app.get('/signin', (req,res)=>res.render('signin'));
+app.post('/signin',(req,res)=>{
+  const {email,password} = req.body;
+  db.get("SELECT * FROM users WHERE email=?",[email],async (err,user)=>{
+    if(!user) return res.send("User not found.");
+    const match = await bcrypt.compare(password,user.password);
+    if(match){
+      req.session.userId = user.id;
+      res.redirect('/');
+    } else {
+      res.send("Incorrect password.");
+    }
+  });
+});
+
+// Logout
+app.get('/logout',(req,res)=>{
+  req.session.destroy();
+  res.redirect('/');
+});
+
+// Checkout / Invoices
+app.post('/checkout',(req,res)=>{
+  if(!req.session.userId) return res.redirect('/signin');
+  const {plan,amount} = req.body;
+  db.get("SELECT username FROM users WHERE id=?",[req.session.userId],(err,row)=>{
+    db.run("INSERT INTO invoices(user,plan,amount,status) VALUES(?,?,?,?)",[row.username,plan,amount,"UNPAID"],function(){
+      res.redirect('/invoice/'+this.lastID);
+    });
+  });
+});
+
+// Invoice page
+app.get('/invoice/:id',(req,res)=>{
+  db.get("SELECT * FROM invoices WHERE id=?",[req.params.id],(err,row)=>{
+    res.render('invoice',{
       invoice: row,
       upi: "8755016597@fam",
       ltc: "ltc1qyl3cvhlvyx32yunr5ltw0utkjp6mma0wsu9uhn"
     });
   });
 });
-app.post('/invoice/:id/upload', upload.single('ss'), (req, res) => {
-  db.run(
-    "UPDATE invoices SET screenshot=?, status=? WHERE id=?",
-    [req.file.filename, "PENDING", req.params.id]
-  );
-  res.redirect('/invoice/' + req.params.id);
+
+// Upload screenshot
+app.post('/invoice/:id/upload', upload.single('ss'),(req,res)=>{
+  db.run("UPDATE invoices SET screenshot=?, status=? WHERE id=?",[req.file.filename,"PENDING",req.params.id]);
+  res.redirect('/invoice/'+req.params.id);
 });
-app.get('/admin', (req, res) => res.render('admin_login'));
-app.post('/admin', (req, res) => {
-  if (
-    req.body.email === "cloundown8@gmail.com" &&
-    req.body.password === "nextloyed@#1billing"
-  ) { return res.redirect('/admin/panel'); }
-  res.send("Invalid credentials");
+
+// Admin
+app.get('/admin', (req,res)=>{
+  db.all("SELECT * FROM invoices",(err,rows)=>res.render('admin',{invoices:rows}));
 });
-app.get('/admin/panel', (req, res) => {
-  db.all("SELECT * FROM invoices", (err, rows) => { res.render('admin', { invoices: rows }); });
+
+// Approve/Reject
+app.get('/admin/approve/:id',(req,res)=>{
+  db.run("UPDATE invoices SET status='PAID' WHERE id=?",[req.params.id]);
+  res.redirect('/admin');
 });
-app.get('/admin/approve/:id', (req, res) => {
-  db.run("UPDATE invoices SET status='PAID' WHERE id=?", req.params.id);
-  res.redirect('/admin/panel');
-});
-app.get('/admin/reject/:id', (req, res) => {
-  db.run("UPDATE invoices SET status='REJECTED' WHERE id=?", req.params.id);
-  res.redirect('/admin/panel');
+app.get('/admin/reject/:id',(req,res)=>{
+  db.run("UPDATE invoices SET status='REJECTED' WHERE id=?",[req.params.id]);
+  res.redirect('/admin');
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Billing panel running on port ${PORT}`));
+app.listen(PORT,()=>console.log(`Billing panel running on port ${PORT}`));
