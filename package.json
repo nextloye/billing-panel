@@ -10,6 +10,8 @@
     "multer": "git+https://github.com/expressjs/multer.git",
     "sqlite3": "5.1.6",
     "nodemailer": "6.9.4",
-    "ejs": "3.1.9"
+    "ejs": "3.1.9",
+    "bcrypt": "5.1.0",
+    "express-session": "1.17.3"
   }
 }
