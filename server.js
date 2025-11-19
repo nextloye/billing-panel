@@ -31,7 +31,7 @@ db.serialize(() => {
 // Multer storage
 const upload = multer({ dest: uploadDir });
 
-// Email setup (dummy credentials, replace with real SMTP if needed)
+// Email setup (dummy credentials)
 let transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
@@ -40,23 +40,15 @@ let transporter = nodemailer.createTransport({
 });
 
 // Routes
-
-// Home
 app.get('/', (req, res) => res.render('home'));
-
-// Checkout / create invoice
 app.post('/checkout', (req, res) => {
   const { user, plan, amount } = req.body;
   db.run(
     "INSERT INTO invoices(user, plan, amount, status) VALUES (?,?,?,?)",
     [user, plan, amount, "UNPAID"],
-    function () {
-      res.redirect('/invoice/' + this.lastID);
-    }
+    function () { res.redirect('/invoice/' + this.lastID); }
   );
 });
-
-// Invoice page
 app.get('/invoice/:id', (req, res) => {
   db.get("SELECT * FROM invoices WHERE id=?", req.params.id, (err, row) => {
     res.render('invoice', {
@@ -66,8 +58,6 @@ app.get('/invoice/:id', (req, res) => {
     });
   });
 });
-
-// Upload screenshot
 app.post('/invoice/:id/upload', upload.single('ss'), (req, res) => {
   db.run(
     "UPDATE invoices SET screenshot=?, status=? WHERE id=?",
@@ -75,27 +65,17 @@ app.post('/invoice/:id/upload', upload.single('ss'), (req, res) => {
   );
   res.redirect('/invoice/' + req.params.id);
 });
-
-// Admin login
 app.get('/admin', (req, res) => res.render('admin_login'));
 app.post('/admin', (req, res) => {
   if (
     req.body.email === "cloundown8@gmail.com" &&
     req.body.password === "nextloyed@#1billing"
-  ) {
-    return res.redirect('/admin/panel');
-  }
+  ) { return res.redirect('/admin/panel'); }
   res.send("Invalid credentials");
 });
-
-// Admin panel
 app.get('/admin/panel', (req, res) => {
-  db.all("SELECT * FROM invoices", (err, rows) => {
-    res.render('admin', { invoices: rows });
-  });
+  db.all("SELECT * FROM invoices", (err, rows) => { res.render('admin', { invoices: rows }); });
 });
-
-// Approve/Reject
 app.get('/admin/approve/:id', (req, res) => {
   db.run("UPDATE invoices SET status='PAID' WHERE id=?", req.params.id);
   res.redirect('/admin/panel');
@@ -105,6 +85,5 @@ app.get('/admin/reject/:id', (req, res) => {
   res.redirect('/admin/panel');
 });
 
-// Use dynamic PORT for Render
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Billing panel running on port ${PORT}`));
